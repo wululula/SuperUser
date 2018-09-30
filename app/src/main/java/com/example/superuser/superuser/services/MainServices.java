@@ -10,9 +10,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.superuser.superuser.MainActivity;
 import com.example.superuser.superuser.util.LogUtils;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -110,17 +112,32 @@ public class MainServices extends Service {
     }
 
     public static void do_exec(String cmdString) {
-        System.out.println("在cmd里面输入" + cmdString);
-        Process p;
+        Log.i("aaa","在cmd里面输入" + cmdString);
+        DataOutputStream ops = null;
         try {
-            p = Runtime.getRuntime().exec(cmdString);
-            BufferedReader bReader = new BufferedReader(new InputStreamReader(
-                    p.getInputStream(), "gbk"));
-            String line = null;
-            while ((line = bReader.readLine()) != null)
-                logUtils.addLog(line);
-        } catch (Exception e) {
+            Process process = Runtime.getRuntime().exec("sh");
+            ops = new DataOutputStream(process.getOutputStream());
+            ops.writeBytes(cmdString);
+            ops.flush();
+            Log.d("aaa", "process back for == " + process.waitFor());
+            if (process.waitFor() == 0) {
+                Log.i("aaa","cmd success");
+            } else {
+                Log.i("aaa","cmd faile");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
+            Log.v("aaa", "write fail...");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (ops != null) {
+                try {
+                    ops.close();
+                } catch (IOException ee) {
+                    ee.printStackTrace();
+                }
+            }
         }
     }
 
@@ -158,5 +175,11 @@ public class MainServices extends Service {
         }
         Log.i("aaa","curAppTaskPackgeName : "+curAppTaskPackgeName);
         return curAppTaskPackgeName;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 }
