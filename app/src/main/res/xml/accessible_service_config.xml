@@ -6,5 +6,5 @@
     android:accessibilityFlags="flagReportViewIds"
     android:canRetrieveWindowContent="true"
     android:notificationTimeout="100"
-    android:description="趣头条专用"
-    android:packageNames="com.jifen.qukan"/>
+    android:description="@string/description"
+    android:packageNames="com.android.settings"/>

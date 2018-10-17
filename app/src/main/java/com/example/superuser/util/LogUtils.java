@@ -1,4 +1,4 @@
-package com.example.superuser.superuser.util;
+package com.example.superuser.util;
 
 import android.annotation.SuppressLint;
 import android.os.Environment;
